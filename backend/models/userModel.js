@@ -19,6 +19,13 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    profile : {
+        filename : String
+    },
+    accountStatus:{
+        type:Boolean,
+        default:true
+    }
 },{timestamps : true});
 
 //Export the model

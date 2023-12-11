@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel')
 
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) =>{
-    return jwt.sign({userId : id}, process.env.JWT_SECRET,{expiresIn:maxAge})
+const createToken = (id) => {
+    return jwt.sign({ userId: id }, process.env.JWT_SECRET, { expiresIn: maxAge })
 }
 const hashPassword = async (originalPassword) => {
     const hashedPassword = await bcrypt.hash(originalPassword, 10);
@@ -16,24 +16,24 @@ const hashPassword = async (originalPassword) => {
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const userExist = await User.findOne({ email: email });
+        const userExist = await User.findOne({ email: email, accountStatus: true });
         if (userExist) {
             const match = await bcrypt.compare(password, userExist.password);
             if (match) {
                 const token = createToken(userExist._id)
-                const {password, ...user} = userExist._doc
+                const { password, ...user } = userExist._doc
                 res.status(200).json({
                     success: true,
                     message: "user loged in successfully",
-                    data : {
-                        user 
+                    data: {
+                        user
                     },
                     token
                 })
             } else {
                 res.status(409).json({
                     success: false,
-                    message: "Password not matched", 
+                    message: "Password not matched",
                 })
             }
         } else {
@@ -79,7 +79,31 @@ const registerUser = async (req, res) => {
         })
     }
 }
+
+// update Profile image  
+const updateProfile = async (req, res) => {
+    try {
+        if (!req.file) throw new Error('Internal server error');
+        let user = await User.findById(req.params.id)
+        user.profile = {
+            filename: req.file.filename
+        }
+        user.save()
+        res.json({
+            success: true,
+            message: 'Profile updated successfully'
+        }) 
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 module.exports = {
     userLogin,
-    registerUser
+    registerUser,
+    updateProfile
 }
