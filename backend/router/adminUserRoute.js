@@ -6,11 +6,12 @@ const {
     updateUser
 
 } = require('../controller/adminUserController')
+const {registerUser} = require('../controller/userController')
 
 
 router.get('/', getAllUsers)
 router.get('/:id', getUser)
-router.post('/', )
+router.post('/', registerUser)
 router.delete('/:id', deleteUser)
 router.put('/:id', updateUser)
 
