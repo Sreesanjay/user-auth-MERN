@@ -1,0 +1,50 @@
+.sign-up{
+    font-size:35px;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+.sign-up-container{
+    height: 90vh;
+    background-color: #ececec;
+    display: flex;
+    border-radius: 10px;
+    overflow:hidden;
+}
+
+.sign-up .left-section{
+    padding: 0 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+}
+.sign-up .right-section{
+    width:500px;
+    background: url(https://st2.depositphotos.com/36549822/49178/v/600/depositphotos_491783716-stock-illustration-app-development-concept-software-technology.jpg);
+    background-repeat:no-repeat;
+    background-size: cover;
+    border:5px solid  #ececec;
+}
+@media screen and (max-width: 1100px) {
+    .right-section{
+       display: none;
+    }
+}
+@media screen and (max-width: 500px) {
+    .sign-up-container{
+        width:100vw;
+        height:100vh;
+    }
+    .left-section{
+       width: 100vw;
+    }
+}
+.left-section h4{
+    margin-bottom: 30px;
+}
+
+.login-ref{
+    text-align: center;
+}
