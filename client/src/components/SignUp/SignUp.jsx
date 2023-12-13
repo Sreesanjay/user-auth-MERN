@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./SignUp.css";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import "./SignUp.css";
 import LoadSpinner from "../../assets/LoadSpinner";
+
 export default function SignUp() {
      const initialState = { name: "", email: "", mobile: "", password: "" };
      const [formState, setFormState] = useState(initialState);
@@ -20,23 +22,31 @@ export default function SignUp() {
      }
 
      useEffect(() => {
-      const submitForm = async()=>{
-        if (Object.keys(formErrors).length === 0 && isSubmit) {
-             setisLoading(true);
-            try {
-              let res = await axios.post("http://localhost:5000/register-user",formState);
-              if(res.data.success) {
-                navigate('/login');
-              }else{
-                throw new Error(res.data.message)
-              }
-            }
-            catch(err) {
-              console.log(err.message);
-            }
-        }
-      }
-      submitForm()
+          const submitForm = async () => {
+               if (Object.keys(formErrors).length === 0 && isSubmit) {
+                    setisLoading(true);
+                    try {
+                         let res = await axios.post(
+                              "http://localhost:5000/register-user",
+                              formState
+                         );
+                         setisLoading(false);
+                         if (res.data.error) {
+                              throw Error(res.data.message);
+                         }
+                         if (res.data.success) {
+                              toast(res.data.message);
+                              navigate("/login");
+                         } else {
+                              setFormErrors({ serverError: res.data.message });
+                         }
+                    } catch (err) {
+                         setisLoading(false);
+                         toast.error(err.message);
+                    }
+               }
+          };
+          submitForm();
      }, [formErrors, formState, isSubmit, navigate]);
 
      function validate() {
@@ -75,6 +85,13 @@ export default function SignUp() {
                     <div className="sign-up-container">
                          <div className="left-section">
                               <h4>Sign Up</h4>
+                              <div className="form-group">
+                                   {formErrors.serverError && (
+                                        <span className="error-msg global-error">
+                                             {formErrors.serverError}
+                                        </span>
+                                   )}
+                              </div>
                               <form
                                    className="sign-up-form"
                                    onSubmit={handleSubmit}

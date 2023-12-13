@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 const path = require('path')
 const connect = require('./config/dbConnect')
+const cookieParser = require("cookie-parser");
 const app = express();
 require('dotenv').config()
 
@@ -17,6 +18,7 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 // router setup
 app.use('/', userRoute)
