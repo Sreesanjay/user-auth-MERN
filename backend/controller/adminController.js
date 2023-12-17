@@ -24,10 +24,15 @@ const login = async (req, res) => {
         }
 
         const token = createToken(admin._id);
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            maxAge: 3 * 24 * 60 * 60
+        })
        
         res.status(200).json({
             success: true,
             message: "loged in successfully",
+            user:admin,
             token
         })
     } catch (error) {

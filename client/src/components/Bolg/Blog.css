@@ -1,0 +1,56 @@
+.blog-container{
+    padding:20px 30px;
+}
+.blog-container > *{
+    margin-bottom: 20px;
+}
+.card-container{
+    height: 400px;
+    /* overflow-y: scroll; */
+    display: flex;
+}
+.card-container .travel-img{
+    height:100%;
+    border-radius: 10px;
+}
+.card-container .details-container{
+    padding: 25px;
+}
+
+.location-container{
+    display: flex;
+    align-items: center;
+}
+.location-container a{
+    text-decoration: none;
+    opacity: 0.6;
+}
+.location-container .location-img{
+    width:25px;
+}
+
+.location-container :nth-child(2){
+    margin-right: 15px;
+}
+.details-container{
+    overflow-y: scroll;
+}
+.blog-title {
+    margin-top:15px;
+}
+.travel-date {
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 800px){
+    .card-container{
+         flex-direction: column;
+         height: auto;
+         overflow-y: none;
+    }
+    .card-container .travel-img{
+         width: 100%;
+         height: auto;
+    }
+
+}

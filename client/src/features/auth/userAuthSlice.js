@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authService from "./auth.service"
+import authService from "./authService"
+import Cookies from 'universal-cookie';
+const cookies = new Cookies()
+
 
 
 const initialState = {
     user: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null,
-    isAuthenticated: false,
-    role: '',
+    role:  localStorage.getItem("role") ? JSON.parse(localStorage.getItem("role")) : '',
     isLoading: false,
     isError: false,
     isSuccess: false,
@@ -26,13 +28,26 @@ export const login = createAsyncThunk(
         }
     }
 )
+
+export const updateProfile = createAsyncThunk(
+    'auth/updateProfile',
+    async(form,thunkAPI)=>{
+        try{
+            const profile = await authService.updateProfile(form)
+            return profile
+        }catch(error) {
+            return thunkAPI.rejectWithValue(error.response.data?.message)
+        }
+    }
+)
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         logout: (state) => {
             localStorage.removeItem("userInfo");
-            state.isAuthenticated = false;
+            localStorage.removeItem("role");
+            cookies.remove("accessToken")
             state.user = null;
             state.role = '';  
         },
@@ -51,17 +66,21 @@ const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.isAuthenticated = true;
                 state.user = action.payload.user;
-                console.log(action.payload.role)
                 state.role = action.payload.role
                 state.isSuccess = true
+                cookies.set("accessToken", action.payload.token ,{ sameSite: 'None', secure: true })
+
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
                 state.user = null;
                 state.isError = true;
                 state.error = action.payload
+            })
+            .addCase(updateProfile.fulfilled,(state, action) => {
+                state.user.profile = {filename : action.payload.filename}
+                localStorage.setItem('userInfo', JSON.stringify(state.user));
             })
     }
 })

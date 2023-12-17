@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const {isAdminLogedIn} = require('../middlewares/authMiddleware')
 const {
     getAllUsers,
     getUser,
@@ -9,7 +10,7 @@ const {
 const {registerUser} = require('../controller/userController')
 
 
-router.get('/', getAllUsers)
+router.get('/',isAdminLogedIn, getAllUsers)
 router.get('/:id', getUser)
 router.post('/', registerUser)
 router.delete('/:id', deleteUser)

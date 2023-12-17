@@ -1,14 +1,11 @@
 import "./Home.css"
-import { useDispatch } from "react-redux"
-import {logout} from "../../features/auth/userAuthSlice"
+import travel_blogs from "../../assets/posts";
+import Blog from "../Bolg/Blog";
 export default function Home() {
-  const dispatch = useDispatch()
+  const blog_components = travel_blogs.map((blog) => <Blog key = {blog.id} {...blog} />);
   return (
     <div>
-      <h1>Home</h1>
-      <button onClick={()=>dispatch(logout())}>
-        logout
-      </button>
+      {blog_components}
     </div>
   )
 }

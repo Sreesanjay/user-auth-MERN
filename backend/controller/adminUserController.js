@@ -1,12 +1,29 @@
+const { query } = require('express');
 const User = require('../models/userModel');
 
 const getAllUsers = async (req, res, next) => {
-    const users = await User.find({ accountStatus: true });
+    console.log(req.cookies)
+    try{
+    let filter={
+        accountStatus:true
+    };
+    if(req.query.searchKey!==''){
+        filter.name = { $regex: new RegExp(req.query.searchKey, 'i') };
+    }
+    
+    const users = await User.find(filter);
     res.status(200).json({
         success: true,
         message: 'All user fetched successfully',
-        data: { users }
+        users 
     });
+    }catch(error){
+        console.log(error)
+        res.status(500).json({
+            status :500,
+            message : "Internal server error"
+        })
+    }
 }
 
 const getUser = async (req, res, next) => {
@@ -15,12 +32,12 @@ const getUser = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: 'User fetched successfully',
-            data: { user }
+            user
         })
 
     } catch (error) {
         res.status(500).json({
-            success: false,
+            status: 500,
             message: "Internal server error!"
         })
     }

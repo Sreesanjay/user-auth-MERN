@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import "./SignUp.css";
 import LoadSpinner from "../../assets/LoadSpinner";
 
-export default function SignUp() {
+export default function SignUp({role}) {
      const initialState = { name: "", email: "", mobile: "", password: "" };
      const [formState, setFormState] = useState(initialState);
      const [formErrors, setFormErrors] = useState({});
@@ -25,9 +26,10 @@ export default function SignUp() {
           const submitForm = async () => {
                if (Object.keys(formErrors).length === 0 && isSubmit) {
                     setisLoading(true);
+                    const URL = role === 'ADMIN' ? 'http://localhost:5000/admin/user-management' : 'http://localhost:5000/register-user';
                     try {
                          let res = await axios.post(
-                              "http://localhost:5000/register-user",
+                              URL,
                               formState
                          );
                          setisLoading(false);
@@ -36,7 +38,8 @@ export default function SignUp() {
                          }
                          if (res.data.success) {
                               toast(res.data.message);
-                              navigate("/login");
+                              const NAV_URL = role === 'ADMIN' ? '/admin/dashboard' : "/login"
+                              navigate(NAV_URL);
                          } else {
                               setFormErrors({ serverError: res.data.message });
                          }
@@ -47,7 +50,7 @@ export default function SignUp() {
                }
           };
           submitForm();
-     }, [formErrors, formState, isSubmit, navigate]);
+     }, [formErrors, formState, isSubmit, navigate,role]);
 
      function validate() {
           const { name, email, mobile, password } = formState;
@@ -176,3 +179,7 @@ export default function SignUp() {
           </section>
      );
 }
+
+SignUp.propTypes = {
+     role: PropTypes.string.isRequired,
+};

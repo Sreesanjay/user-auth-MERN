@@ -4,8 +4,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { reset } from "../../features/auth/userAuthSlice";
-import { login } from "../../features/auth/userAuthSlice";
+import { reset ,login} from "../../features/auth/userAuthSlice";
 import LoadSpinner from "../../assets/LoadSpinner";
 
 import "./Login.css";
@@ -51,13 +50,13 @@ export default function Login(props) {
 
      useEffect(() => {
           if (isError) {
-               if (error.status === 500) {
-                    toast.error(error.message);
+               if (error?.status === 500) {
+                    toast.error(error?.message);
                } else {
-                    setFormErrors({ serverError: error.message });
+                    setFormErrors({ serverError: error?.message });
                }
           }
-          if (isSuccess || user) {
+          if (isSuccess || role === props.role) {
             if(role === 'ADMIN') {
                 navigate("/admin/dashboard");
             }else if(role === 'PUBLIC') {
@@ -65,7 +64,7 @@ export default function Login(props) {
             } 
           }
           dispatch(reset());
-     }, [user, isError, role,isSuccess,error.status, error.message,dispatch, navigate]);
+     }, [user, isError, role,isSuccess,error?.status, error?.message,dispatch, navigate,props?.role]);
 
      function validate() {
           const regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;

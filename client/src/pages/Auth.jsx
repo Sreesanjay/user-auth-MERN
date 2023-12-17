@@ -6,7 +6,9 @@ export default function Auth({allowedRole}) {
   const {role} = useSelector((state)=>state.auth)  
   const location = useLocation();
   const isUser = allowedRole===role
-  const LOGIN_URL = allowedRole === 'ADMIN' ? '/login' : '/admin/login';
+  console.log("allow role",allowedRole)
+  const LOGIN_URL = allowedRole === 'ADMIN' ? '/admin/login' : '/login';
+  console.log(LOGIN_URL)
   return (
     <>
     {
@@ -18,5 +20,5 @@ export default function Auth({allowedRole}) {
   )
 }
 Auth.propTypes = {
-  allowedRole : PropTypes.arrayOf(PropTypes.string).isRequired 
+  allowedRole : PropTypes.string.isRequired 
 }

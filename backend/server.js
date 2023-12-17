@@ -14,11 +14,14 @@ const adminRoute = require('./router/adminRouter')
 //db connection 
 connect()
 //parse request
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // router setup
 app.use('/', userRoute)

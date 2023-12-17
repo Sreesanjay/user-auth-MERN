@@ -3,6 +3,7 @@ const upload = require('../middlewares/multerConfig')
 
 //controllers  
 const userAuthController = require('../controller/userController')
+const {isUserLogedIn} = require('../middlewares/authMiddleware')
 
 const router = express.Router()
 router.post('/',(req,res) => {
@@ -16,6 +17,6 @@ router.post('/',(req,res) => {
 })
 router.post('/login', userAuthController.userLogin)
 router.post('/register-user', userAuthController.registerUser)
-router.post('/update-profile/:id',upload.single('profile'),userAuthController.updateProfile)
+router.post('/update-profile/:id',isUserLogedIn,upload.single('profile'),userAuthController.updateProfile)
 
 module.exports = router

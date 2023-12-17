@@ -18,10 +18,6 @@ const userLogin = async (req, res) => {
             const match = await bcrypt.compare(password, userExist.password);
             if (match) {
                 const token = createToken(userExist._id)
-                res.cookie("access_token", token, {
-                    httpOnly: true,
-                    maxAge: 3 * 24 * 60 * 60
-                })
                 const { password, ...user } = userExist._doc
                 res.status(200).json({
                     success: true,
@@ -40,7 +36,7 @@ const userLogin = async (req, res) => {
             throw error;
         }
     } catch (error) {
-        res.status(error.status||500).json({
+        res.status(error.status || 500).json({
             error: true,
             message: error.message
         })
@@ -92,7 +88,8 @@ const updateProfile = async (req, res) => {
         user.save()
         res.json({
             success: true,
-            message: 'Profile updated successfully'
+            message: 'Profile updated successfully',
+            filename: req.file.filename
         })
 
     } catch (error) {
