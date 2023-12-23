@@ -8,6 +8,7 @@ export default function Auth({allowedRole}) {
   const isUser = allowedRole===role
   console.log("allow role",allowedRole)
   const LOGIN_URL = allowedRole === 'ADMIN' ? '/admin/login' : '/login';
+  
   console.log(LOGIN_URL)
   return (
     <>
